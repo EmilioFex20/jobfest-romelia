@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ConfirmForm } from "@/components/ConfirmForm";
+import { Suspense } from "react";
 
 export default function ConfirmPage() {
   return (
@@ -16,7 +17,15 @@ export default function ConfirmPage() {
           </h1>
         </div>
       </main>
-      <ConfirmForm />
+      <Suspense
+        fallback={
+          <div className="mx-auto max-w-md px-6 py-8 text-sm text-ink/60">
+            Cargando formulario de confirmación...
+          </div>
+        }
+      >
+        <ConfirmForm />
+      </Suspense>
       <Footer />
     </>
   );
