@@ -5,11 +5,11 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
-    const AWS_API_BASE_URL = process.env.AWS_API_BASE_URL;
+    const API_BASE_URL = process.env.API_BASE_URL;
 
-    if (!AWS_API_BASE_URL) {
+    if (!API_BASE_URL) {
       return NextResponse.json(
-        { success: false, message: "AWS_API_BASE_URL no configurada" },
+        { success: false, message: "API_BASE_URL no configurada" },
         { status: 500 },
       );
     }
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const response = await fetch(`${AWS_API_BASE_URL}/admin/users`, {
+    const response = await fetch(`${API_BASE_URL}/admin/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

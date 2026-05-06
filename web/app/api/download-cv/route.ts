@@ -5,13 +5,13 @@ export const runtime = "nodejs";
 
 export async function GET() {
   try {
-    const AWS_API_BASE_URL = process.env.AWS_API_BASE_URL;
+    const API_BASE_URL = process.env.API_BASE_URL;
 
-    if (!AWS_API_BASE_URL) {
+    if (!API_BASE_URL) {
       return NextResponse.json(
         {
           success: false,
-          message: "AWS_API_BASE_URL no está configurada.",
+          message: "API_BASE_URL no está configurada.",
         },
         { status: 500 },
       );
@@ -30,7 +30,7 @@ export async function GET() {
       );
     }
 
-    const response = await fetch(`${AWS_API_BASE_URL}/cv/download`, {
+    const response = await fetch(`${API_BASE_URL}/cv/download`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
