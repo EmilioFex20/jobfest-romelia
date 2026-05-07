@@ -40,6 +40,15 @@ export async function POST(req: NextRequest) {
     const clientSecret = process.env.COGNITO_CLIENT_SECRET;
     const region = process.env.COGNITO_REGION;
 
+    console.log("LOGIN ENV CHECK:", {
+      hasRegion: Boolean(region),
+      hasClientId: Boolean(clientId),
+      hasClientSecret: Boolean(clientSecret),
+      regionLength: region?.length ?? 0,
+      clientIdLength: clientId?.length ?? 0,
+      clientSecretLength: clientSecret?.length ?? 0,
+    });
+
     if (!clientId || !clientSecret || !region) {
       return NextResponse.json(
         {

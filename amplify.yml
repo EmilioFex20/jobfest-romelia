@@ -8,7 +8,10 @@ applications:
             - npm ci --cache .npm --prefer-offline
         build:
           commands:
-            - env | grep -e COGNITO_REGION -e COGNITO_CLIENT_ID -e COGNITO_CLIENT_SECRET -e API_BASE_URL >> .env.production
+            - echo "COGNITO_REGION=$COGNITO_REGION" >> .env.production
+            - echo "COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID" >> .env.production
+            - echo "COGNITO_CLIENT_SECRET=$COGNITO_CLIENT_SECRET" >> .env.production
+            - echo "API_BASE_URL=$API_BASE_URL" >> .env.production
             - npm run build
       artifacts:
         baseDirectory: .next
