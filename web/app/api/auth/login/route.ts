@@ -38,23 +38,18 @@ export async function POST(req: NextRequest) {
 
     const clientId = process.env.COGNITO_CLIENT_ID;
     const clientSecret = process.env.COGNITO_CLIENT_SECRET;
+    const region = process.env.COGNITO_REGION;
 
-    if (!clientId) {
+    if (!clientId || !clientSecret || !region) {
       return NextResponse.json(
         {
           success: false,
-          message: "Configuración de Cognito incompleta. Falta Client ID.",
-          code: "SERVER_CONFIG_ERROR",
-        },
-        { status: 500 },
-      );
-    }
-    if (!clientSecret) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Configuración de Cognito incompleta. Falta Client Secret.",
-          code: "SERVER_CONFIG_ERROR",
+          message: "Configuración de Cognito incompleta.",
+          missing: {
+            COGNITO_CLIENT_ID: !clientId,
+            COGNITO_CLIENT_SECRET: !clientSecret,
+            COGNITO_REGION: !region,
+          },
         },
         { status: 500 },
       );
