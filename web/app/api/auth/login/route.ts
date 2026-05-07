@@ -39,11 +39,21 @@ export async function POST(req: NextRequest) {
     const clientId = process.env.COGNITO_CLIENT_ID;
     const clientSecret = process.env.COGNITO_CLIENT_SECRET;
 
-    if (!clientId || !clientSecret) {
+    if (!clientId) {
       return NextResponse.json(
         {
           success: false,
-          message: "Configuración de Cognito incompleta.",
+          message: "Configuración de Cognito incompleta. Falta Client ID.",
+          code: "SERVER_CONFIG_ERROR",
+        },
+        { status: 500 },
+      );
+    }
+    if (!clientSecret) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Configuración de Cognito incompleta. Falta Client Secret.",
           code: "SERVER_CONFIG_ERROR",
         },
         { status: 500 },
