@@ -36,16 +36,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const clientId = process.env.COGNITO_CLIENT_ID!;
-    const clientSecret = process.env.COGNITO_CLIENT_SECRET!;
+    const clientId = process.env.COGNITO_CLIENT_ID;
+    const clientSecret = process.env.COGNITO_CLIENT_SECRET;
 
-    const secretHash = getSecretHash(email, clientId, clientSecret);
+    if (!clientId || !clientSecret) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Configuración de Cognito incompleta.",
+          code: "SERVER_CONFIG_ERROR",
+        },
+        { status: 500 },
+      );
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const secretHash = getSecretHash(normalizedEmail, clientId, clientSecret);
 
     const command = new InitiateAuthCommand({
       AuthFlow: "USER_PASSWORD_AUTH",
       ClientId: clientId,
       AuthParameters: {
-        USERNAME: email,
+        USERNAME: normalizedEmail,
         PASSWORD: password,
         SECRET_HASH: secretHash,
       },
