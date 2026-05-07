@@ -52,11 +52,14 @@ export async function POST(req: NextRequest) {
       success: true,
       message: "Cuenta confirmada correctamente",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "No se pudo confirmar la cuenta";
+
     return NextResponse.json(
       {
         success: false,
-        message: error?.message || "No se pudo confirmar la cuenta",
+        message,
       },
       { status: 400 },
     );

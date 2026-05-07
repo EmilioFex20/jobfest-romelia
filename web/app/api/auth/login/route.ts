@@ -122,11 +122,13 @@ export async function POST(req: NextRequest) {
     }
 
     return res;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Login failed";
+
     return NextResponse.json(
       {
         success: false,
-        message: error?.message || "Login failed",
+        message,
       },
       { status: 400 },
     );

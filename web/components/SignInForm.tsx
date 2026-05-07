@@ -3,34 +3,18 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import * as z from "zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from "@/components/ui/input-group";
 
 const formSchema = z.object({
   email: z
@@ -81,8 +65,13 @@ export function SignInForm() {
         router.push(data.redirectTo || "/student");
       }
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || "Ocurrió un error al iniciar sesión");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Ocurrió un error al iniciar sesión";
+
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -146,6 +135,11 @@ export function SignInForm() {
             {loading ? "Entrando..." : "Iniciar sesión"}
           </Button>
         </Field>
+        {error && (
+          <div className="mt-2 text-sm text-red-500" role="alert">
+            {error}
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

@@ -3,6 +3,40 @@ import { cookies } from "next/headers";
 
 export const runtime = "nodejs";
 
+type ExperienceInput = {
+  place: string;
+  start: string;
+  end: string;
+  desc: string;
+};
+
+type ProjectInput = {
+  title: string;
+  desc: string;
+};
+
+type GenerateCvBody = {
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone: string;
+  email: string;
+  major: string;
+  semester: string;
+  professionalProfile: string;
+  gpa: string;
+  relevantCoursework: string;
+  experience?: ExperienceInput[];
+  projects?: ProjectInput[];
+  technicalSkills?: string[];
+  softSkills?: string[];
+  languages?: string[];
+};
+
 export async function POST(req: Request) {
   const API_BASE_URL = process.env.API_BASE_URL;
 
@@ -19,7 +53,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = await req.json();
+    const body = (await req.json()) as GenerateCvBody;
 
     const rawRequest = {
       q3_fullName: {
@@ -44,7 +78,7 @@ export async function POST(req: Request) {
       q10_relevantCoursework: body.relevantCoursework,
 
       q43_relevantExperience: JSON.stringify(
-        body.experience?.map((exp: any) => ({
+        body.experience?.map((exp) => ({
           Place: exp.place,
           "Start Date": exp.start,
           "End Date or Ongoing": exp.end,
@@ -53,7 +87,7 @@ export async function POST(req: Request) {
       ),
 
       q44_projects: JSON.stringify(
-        body.projects?.map((project: any) => ({
+        body.projects?.map((project) => ({
           "Project Title": project.title,
 
           "Brief Description": project.desc,

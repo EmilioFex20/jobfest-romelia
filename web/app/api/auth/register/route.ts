@@ -86,10 +86,12 @@ export async function POST(req: NextRequest) {
       userConfirmed: response.UserConfirmed,
       codeDeliveryDetails: response.CodeDeliveryDetails,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log("ERROR COGNITO:", error);
 
-    if (error.name === "UsernameExistsException") {
+    const errorName = error instanceof Error ? error.name : "UnknownError";
+
+    if (errorName === "UsernameExistsException") {
       return NextResponse.json(
         {
           success: false,
@@ -100,7 +102,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (error.name === "InvalidPasswordException") {
+    if (errorName === "InvalidPasswordException") {
       return NextResponse.json(
         {
           success: false,
@@ -111,7 +113,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (error.name === "InvalidParameterException") {
+    if (errorName === "InvalidParameterException") {
       return NextResponse.json(
         {
           success: false,
@@ -122,7 +124,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (error.name === "LimitExceededException") {
+    if (errorName === "LimitExceededException") {
       return NextResponse.json(
         {
           success: false,

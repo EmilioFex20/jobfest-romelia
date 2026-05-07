@@ -2,11 +2,10 @@
 
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -51,7 +50,10 @@ export function ConfirmForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const email = form.watch("email");
+  const email = useWatch({
+    control: form.control,
+    name: "email",
+  });
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     setError("");
@@ -73,8 +75,13 @@ export function ConfirmForm() {
 
       router.push("/login");
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || "Ocurrió un error al iniciar sesión");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Ocurrió un error al iniciar sesión";
+
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -85,18 +92,12 @@ export function ConfirmForm() {
       <CardContent>
         <form id="sign-in-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
-            <Controller
-              name="email"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field>
-                  <FieldLabel>Correo</FieldLabel>
-                  <div className="px-3 py-2 rounded-md bg-muted text-sm text-muted-foreground">
-                    {email}
-                  </div>
-                </Field>
-              )}
-            />
+            <Field>
+              <FieldLabel>Correo</FieldLabel>
+              <div className="px-3 py-2 rounded-md bg-muted text-sm text-muted-foreground">
+                {email || "No se recibió correo en la URL"}
+              </div>
+            </Field>
             <Controller
               name="code"
               control={form.control}
@@ -131,6 +132,11 @@ export function ConfirmForm() {
             {loading ? "Entrando..." : "Iniciar sesión"}
           </Button>
         </Field>
+        {error && (
+          <div className="mt-2 text-sm text-red-500" role="alert">
+            {error}
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

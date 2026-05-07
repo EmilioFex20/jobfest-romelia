@@ -9,28 +9,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from "@/components/ui/input-group";
 
 const formSchema = z
   .object({
@@ -98,10 +84,11 @@ export function SignUpForm() {
 
       setMessage(data.message);
       toast.success("Cuenta creada. Revisa tu correo para confirmar.");
-
       router.push(`/confirm?email=${encodeURIComponent(values.email)}`);
-    } catch (err: any) {
-      const msg = err.message || "Ocurrió un error al registrarse";
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : "Ocurrió un error al registrarse";
+
       setError(msg);
       toast.error(msg);
     } finally {

@@ -1,14 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useRouter } from "next/navigation";
 
 export default function StudentDashboard() {
-  const router = useRouter();
-
   return (
     <>
       <Navbar />
